@@ -15,7 +15,7 @@ app = Flask(__name__)
 # Making a database connection
 db_connection = sql.connect(host="localhost",
   user="Divya",
-  password="Divya23@",
+  password="*********",
   database="ontario_firehydrants")
 
 db_cursor = db_connection.cursor()
