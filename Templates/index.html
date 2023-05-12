@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <title>Ontario Fire Hydrants</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <!-- playground-hide -->
+    
+    <!-- playground-hide-end -->
+
+    <style>
+        /* Set the size of the div element that contains the map */
+#map {
+  height: 100%;
+  /* The height is 400 pixels */
+  width: 100%;
+  /* The width is the width of the web page */
+}
+    </style>
+  </head>
+  <body>
+    <form method="POST">
+    <input type="text" id="fname" name="text" >
+    <input type="submit" value="Submit">
+</form>
+
+<br>
+<br>
+<br>
+
+    <div id="map"></div>
+</body>
+<script>
+
+
+
+    // Initialize and add the map
+function initMap() {
+    test = {{ list_to_send | tojson }};
+var result = [];
+for(var i in test)
+    result.push([i, test [i]]);
+
+console.log(result[0][1])
+lat = result[0][1];
+lng = result[1][1];
+var result2 = [];
+test2 = {{ render_data | tojson }};
+for(var i in test2)
+    result2.push([i, test2 [i]]);
+
+console.log(result2);
+var vv = {"lat":Number(lat),"lng":Number(lng)};
+const myLatLng = { lat: 43.67771760000001, lng: -79.6248197 };
+
+
+console.log(vv)
+  // The location of Uluru
+  const uluru = vv;
+  // The map, centered at Uluru
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 16,
+    center: uluru,
+  });
+  
+  var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(lat,lng),
+                        map: map,
+                        
+                        
+                    });
+  for (var i = 0; i < result2.length; i++) {
+                    // init markers
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(result2[i][1][0],result2[i][1][1]),
+                        map: map,
+                        icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                        
+                    });
+
+                    // process multiple info windows
+                    (function(marker, i) {
+                        // add click event
+                        google.maps.event.addListener(marker, 'click', function() {
+                            infowindow = new google.maps.InfoWindow({
+                                content: 'Hello, World!!'
+                            });
+                            infowindow.open(map, marker);
+                        });
+                    })(marker, i);
+                }
+}
+</script>
+
+    <!-- 
+     The `defer` attribute causes the callback to execute after the full HTML
+     document has been parsed. For non-blocking uses, avoiding race conditions,
+     and consistent behavior across browsers, consider loading using Promises
+     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+    -->
+    
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPy6stcEvj-DujE12plVZ0-qbfdcWbJ1E&callback=initMap&v=weekly"
+    defer
+  ></script>
+  
+</html>
